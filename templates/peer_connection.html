@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peer Connections – CHATHeal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #1f2937, #4b5563);
+      color: #f9fafb;
+      display: flex;
+      min-height: 100vh;
+    }
+    aside {
+      width: 80px;
+      background-color: #111827;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 0;
+      border-right: 1px solid #374151;
+    }
+    aside a {
+      margin: 1.5rem 0;
+      color: #9ca3af;
+      font-size: 1.5rem;
+    }
+    aside a:hover,
+    aside a.active {
+      color: #3b82f6;
+    }
+    main {
+      flex: 1;
+      padding: 2.5rem;
+      overflow-y: auto;
+    }
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 1.2rem;
+    }
+    .intro, .connect-section {
+      background: #1e293b;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+      margin-bottom: 2rem;
+    }
+    .intro p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #d1d5db;
+    }
+    .connect-section h2 {
+      color: #93c5fd;
+      margin-bottom: 1rem;
+    }
+    .chat-card {
+      background-color: #374151;
+      padding: 1.2rem 1.5rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-card span {
+      font-size: 1.1rem;
+      color: #e0e7ff;
+    }
+    .chat-card button {
+      background-color: #3b82f6;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.5rem;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .chat-card button:hover {
+      background-color: #2563eb;
+    }
+    @media (max-width: 600px) {
+      main {
+        padding: 1.2rem;
+      }
+      .chat-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside>
+    <a href="\index"><i class="fas fa-home"></i></a>
+    <a href="\chat"><i class="fas fa-comments"></i></a>
+    <a href="\therapies" class="active"><i class="fas fa-heart"></i></a>
+    <a href="\tracker"><i class="fas fa-chart-line"></i></a>
+    <a href="\profile"><i class="fas fa-user"></i></a>
+  </aside>
+  <main>
+    <h1>Peer Connections</h1>
+    <div class="intro">
+      <p>Connecting with people who understand your experiences can be incredibly healing. Through peer conversations, support circles, and shared stories, you're never alone on your journey.</p>
+    </div>
+
+    <div class="connect-section">
+      <h2>Available Peer Groups</h2>
+
+      <div class="chat-card">
+        <span>Military Veterans Circle</span>
+        <button onclick="joinGroup('Military Veterans Circle')">Join</button>
+      </div>
+
+      <div class="chat-card">
+        <span>Trauma Survivors Hub</span>
+        <button onclick="joinGroup('Trauma Survivors Hub')">Join</button>
+      </div>
+
+      <div class="chat-card">
+        <span>Anxiety & Coping Chat</span>
+        <button onclick="joinGroup('Anxiety & Coping Chat')">Join</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function joinGroup(groupName) {
+      alert(`You've joined the \"${groupName}\" group! Group chat functionality coming soon.`);
+    }
+  </script>
+</body>
+</html>

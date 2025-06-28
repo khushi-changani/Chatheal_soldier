@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHATHeal – EMDR Therapy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ===== Reset ===== */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      background:linear-gradient(to right,#1f2937,#4b5563);
+      color:#f9fafb;
+      display:flex;
+      min-height:100vh;
+      overflow:hidden;
+    }
+    /* ===== Sidebar ===== */
+    aside{
+      width:80px;background:#111827;border-right:1px solid #374151;
+      flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:1.5rem 0
+    }
+    aside a{position:relative}
+    aside i{color:#9ca3af;font-size:1.75rem;margin:2.5rem 0;transition:color .3s;cursor:pointer}
+    aside a.active i,aside i:hover{color:#3b82f6}
+    aside a:hover::after{content:attr(title);position:absolute;left:100%;top:50%;transform:translateY(-50%);
+      background:#374151;padding:.25rem .6rem;border-radius:.4rem;font-size:.75rem;white-space:nowrap}
+    /* ===== Main ===== */
+    main{flex:1;overflow-y:auto;padding:2.5rem;display:flex;flex-direction:column;gap:2.5rem}
+    /* ===== Hero ===== */
+    .hero{display:flex;gap:2.5rem;background:#1e293b;padding:2.5rem;border-radius:1.25rem;box-shadow:0 6px 15px rgba(0,0,0,.25);flex-wrap:wrap}
+    .hero-text{flex:1 1 320px}
+    .hero-text h1{font-size:2.8rem;font-weight:700;margin-bottom:.6rem}
+    .hero-text p{font-size:1.15rem;color:#d1d5db;max-width:600px}
+    .hero-img{flex:1 1 260px;display:flex;justify-content:center;align-items:center}
+    .hero-img img{max-width:340px;width:100%;border-radius:1rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));user-select:none}
+    /* ===== Section ===== */
+    section{background:#1e293b;padding:2rem 2.5rem;border-radius:1.25rem;box-shadow:0 6px 15px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:1.2rem}
+    section h2{font-size:2rem;color:#bfdbfe}
+    section p,section li{font-size:1.05rem;color:#d1d5db;line-height:1.55}
+    section ul{list-style:disc;margin-left:1.2rem}
+    /* ===== Accordion ===== */
+    .accordion{border-top:1px solid #374151}
+    .accordion-item{border-bottom:1px solid #374151}
+    .acc-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:1rem 0}
+    .acc-header h3{font-size:1.1rem;font-weight:600}
+    .acc-header i{transition:transform .3s}
+    .acc-content{max-height:0;overflow:hidden;transition:max-height .35s ease;padding-right:.5rem}
+    .acc-content p{padding:.6rem 0}
+    .accordion-item.active .acc-content{max-height:240px}
+    .accordion-item.active .acc-header i{transform:rotate(180deg)}
+    /* ===== Benefits Grid ===== */
+    .benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
+    .benefit{
+      background:#273449;border-radius:1rem;padding:1.2rem;display:flex;gap:.8rem;align-items:flex-start
+    }
+    .benefit i{font-size:1.6rem;color:#60a5fa;margin-top:.1rem}
+    .benefit span{font-size:.95rem;color:#d1d5db}
+    /* ===== Resources List ===== */
+    .resources a{color:#60a5fa;text-decoration:none}
+    .resources a:hover{text-decoration:underline}
+    /* ===== Responsive ===== */
+    @media(max-width:900px){
+      aside{flex-direction:row;width:100%;height:60px;border-right:none;border-bottom:1px solid #374151;padding:.5rem 0}
+      aside i{margin:0 1.2rem;font-size:1.5rem}
+      .hero{flex-direction:column;text-align:center}
+      .hero-text h1{font-size:2.2rem}
+      .hero-img img{max-width:260px}
+    }
+  </style>
+</head>
+<body>
+  <!-- ==== Sidebar ==== -->
+  <aside>
+    <a href="\index" title="Home"><i class="fas fa-home" aria-label="Home"></i></a>
+    <a href="\chat" title="Chat"><i class="fas fa-comments" aria-label="Chat"></i></a>
+    <a href="\therapies" title="Therapies" class="active"><i class="fas fa-heart" aria-label="Therapies"></i></a>
+    <a href="\tracker" title="Tracker"><i class="fas fa-chart-line" aria-label="Tracker"></i></a>
+    <a href="\profile" title="Profile"><i class="fas fa-user" aria-label="Profile"></i></a>
+  </aside>
+  <!-- ==== Main ==== -->
+  <main>
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-text">
+        <h1>EMDR Therapy</h1>
+        <p>Eye Movement Desensitization &amp; Reprocessing (EMDR) is a proven, trauma-focused approach that uses rhythmic eye movements or other bilateral stimulation to help the brain reprocess distressing memories, reducing their emotional impact.</p>
+      </div>
+      <div class="hero-img">
+        <img src="emdr-illustration.jpg" alt="Therapist guiding EMDR session" />
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <section>
+      <h2>How EMDR Works</h2>
+      <p>EMDR follows an 8-phase protocol that guides you from history-taking to future resilience. Each phase targets a different aspect of your healing journey.</p>
+      <div class="accordion" id="emdr-accordion">
+        <!-- Phases -->
+        <div class="accordion-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h3>Phase 1 – History &amp; Treatment Planning</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="acc-content">
+            <p>Your therapist reviews your background, identifies target memories, and develops a roadmap for the sessions ahead.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h3>Phase 2 – Preparation</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="acc-content">
+            <p>You learn coping techniques (like safe-place visualization) to manage emotional distress during reprocessing.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h3>Phase 3 – Assessment</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="acc-content">
+            <p>Specific target memories, negative beliefs, and desired positive beliefs are defined.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h3>Phase 4 – Desensitization</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="acc-content">
+            <p>Guided sets of eye movements (or taps/sounds) help your brain reprocess the disturbing memory until distress subsides.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h3>Phase 5 – Installation</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="acc-content">
+            <p>The positive belief you chose becomes associated with the now-neutralized memory.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h3>Phase 6 – Body Scan</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="acc-content">
+            <p>You notice and clear any lingering physical tension linked to the memory.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h3>Phase 7 – Closure</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="acc-content">
+            <p>Every session ends with grounding techniques to ensure you leave feeling safe and stable.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="acc-header" onclick="toggleAcc(this)">
+            <h3>Phase 8 – Reevaluation</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="acc-content">
+            <p>Your therapist reviews progress, checks remaining triggers, and plans future targets.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits -->
+    <section>
+      <h2>Key Benefits</h2>
+      <div class="benefits-grid">
+        <div class="benefit"><i class="fas fa-bolt"></i><span>Rapid relief from trauma symptoms compared to traditional talk therapy.</span></div>
+        <div class="benefit"><i class="fas fa-eye-slash"></i><span>Reduces flashbacks, nightmares, and intrusive thoughts.</span></div>
+        <div class="benefit"><i class="fas fa-hand-holding-heart"></i><span>Requires minimal verbal detail; less re-traumatization.</span></div>
+        <div class="benefit"><i class="fas fa-brain"></i><span>Promotes healthy neural reconnection and adaptive beliefs.</span></div>
+      </div>
+    </section>
+
+    <!-- Self-Care Tips -->
+    <section>
+      <h2>Self-Care Between Sessions</h2>
+      <ul>
+        <li>Practice grounding techniques (e.g., 5-4-3-2-1 senses exercise).</li>
+        <li>Keep a journal to track emotional shifts.</li>
+        <li>Stay hydrated and maintain balanced nutrition.</li>
+        <li>Reach out to supportive friends, family, or your therapist if distress intensifies.</li>
+        <li>Prioritize sleep and gentle movement (walks, stretching).</li>
+      </ul>
+    </section>
+
+    <!-- Resources -->
+    <section class="resources">
+      <h2>Further Resources</h2>
+      <p>Explore these trusted materials to deepen your understanding:</p>
+      <ul>
+        <li><a href="https://www.emdria.org/about-emdr-therapy/" target="_blank" rel="noopener">EMDRIA – Official EMDR Therapy Overview</a></li>
+        <li><a href="https://www.nice.org.uk/guidance/NG116" target="_blank" rel="noopener">NICE Guidelines on PTSD (UK)</a></li>
+        <li><a href="https://www.ptsd.va.gov/" target="_blank" rel="noopener">U.S. VA National Center for PTSD</a></li>
+        <li><a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/da.22844" target="_blank" rel="noopener">Meta-analysis of EMDR efficacy (Journal of Anxiety Disorders)</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- ==== JS ==== -->
+  <script>
+    function toggleAcc(header){
+      const item = header.parentElement;
+      item.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>

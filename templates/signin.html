@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In – CHATHeal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ===== Global ===== */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      background:linear-gradient(135deg,#1f2937 0%,#4b5563 100%);
+      color:#f9fafb;display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden
+    }
+    /* ===== Card ===== */
+    .card{
+      background:#1e293b;padding:3rem 2.5rem;border-radius:1.25rem;
+      max-width:420px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.4);
+      display:flex;flex-direction:column;gap:1.6rem;animation:fadeIn .7s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .card h1{font-size:2rem;text-align:center}
+    .card p{font-size:.95rem;color:#d1d5db;text-align:center}
+    label{font-size:.9rem;color:#d1d5db;margin-top:.6rem}
+    input{
+      width:100%;padding:.9rem 1rem;margin-top:.35rem;border:none;border-radius:.7rem;
+      background:#374151;color:#f9fafb;font-size:.95rem
+    }
+    .toggle{
+      display:flex;align-items:center;justify-content:space-between;font-size:.85rem;margin-top:.6rem;color:#d1d5db
+    }
+    .toggle a{color:#3b82f6;text-decoration:none;font-size:.85rem}
+    .toggle a:hover{text-decoration:underline}
+    button{
+      margin-top:1.4rem;padding:.9rem;width:100%;border:none;border-radius:.7rem;background:#3b82f6;
+      color:#fff;font-weight:600;font-size:1rem;cursor:pointer;transition:background .3s}
+    button:hover{background:#2563eb}
+    .divider{display:flex;align-items:center;gap:.8rem;margin-top:1rem}
+    .divider::before,.divider::after{content:"";flex:1;height:1px;background:#374151}
+    .provider-btn{
+      display:flex;align-items:center;justify-content:center;gap:.6rem;margin-top:.8rem;padding:.8rem;border:1px solid #374151;
+      background:#273449;color:#f9fafb;border-radius:.7rem;font-size:.9rem;cursor:pointer;transition:background .3s,border .3s}
+    .provider-btn:hover{background:#374151;border-color:#3b82f6}
+    .provider-btn i{font-size:1.1rem}
+    /* ===== Responsive ===== */
+    @media(max-width:480px){.card{padding:2.2rem 1.8rem}}
+  </style>
+</head>
+<body>
+  <form class="card signinform" onsubmit="signIn(event)" action="/login" method="post">
+    <h1>Welcome Back</h1>
+    <p>Please sign in to continue your healing journey.</p>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" placeholder="you@example.com" required autocomplete="username" />
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" placeholder="Enter password" required autocomplete="current-password" />
+    </div>
+    <div class="toggle">
+      <label><input type="checkbox" id="remember" style="accent-color:#3b82f6;margin-right:.35rem">Remember me</label>
+      <a href="/forgotpass">Forgot password?</a>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% set category, message = messages[0] %}
+        <p style="color: {{ 'red' if category == 'error' else 'green' }}; text-align: center; margin-top: 10px;">
+          {{ message }}
+        </p>
+      {% endif %}
+    {% endwith %}
+
+    <button type="submit">Sign In</button>
+
+    <div class="divider">or</div>
+
+    <button type="button" class="provider-btn" onclick="alert('Continue with Google coming soon')"><i class="fab fa-google"></i> Continue with Google</button>
+    <button type="button" class="provider-btn" onclick="alert('Continue with Apple coming soon')"><i class="fab fa-apple"></i> Continue with Apple</button>
+
+    <p style="font-size:.85rem;text-align:center;margin-top:1.2rem">New here? <a href="/register" style="color:#3b82f6;text-decoration:none">Create an account</a></p>
+  </form>
+
+  <script>
+    function signIn(e){
+      e.preventDefault();
+      const form = document.getElementsByClassName('signinform')[0];
+      const email = document.getElementById('email').value;
+      const pwd = document.getElementById('password').value;
+      form.submit();
+    }
+  </script>
+</body>
+</html>

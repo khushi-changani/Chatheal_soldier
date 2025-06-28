@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up – CHATHeal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1f2937, #4b5563);
+      color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background-color: #1e293b;
+      padding: 2.5rem;
+      border-radius: 1.25rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      text-align: center;
+      color: #d1d5db;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 0.9rem;
+      color: #d1d5db;
+    }
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 0.6rem;
+      background-color: #374151;
+      color: #f9fafb;
+      font-size: 0.95rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      background-color: #3b82f6;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    .alt {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+    }
+    .alt a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+    .alt a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <form class="card signupform" onsubmit="register(event)" action="/register" method="post">
+    <h1>Create Account</h1>
+    <p>Join CHATHeal and start your healing journey.</p>
+
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="name" placeholder="Your full name" required />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="you@example.com" required />
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Create password" required />
+
+    <label for="confirm">Confirm Password</label>
+    <input type="password" id="confirm" name="confPass" placeholder="Repeat password" required />
+
+    <button type="submit">Sign Up</button>
+
+    {% if error %}
+    <p style="color: red; text-align: center; margin-top: 10px;">{{error}}</p>
+    {% elif success %}
+    <p style="color: green; text-align: center; margin-top: 10px;">{{success}}</p>
+    {% endif %}
+
+    <p class="alt">Already have an account? <a href="/login">Sign in</a></p>
+  </form>
+
+  <script>
+    function register(e) {
+      e.preventDefault();
+      const form = document.getElementsByClassName('signupform')[0];
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+
+      if (password !== confirm) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      alert(`Registered as ${name} (${email}). Please verify your email.`);
+      form.submit();
+    }
+  </script>
+</body>
+</html>

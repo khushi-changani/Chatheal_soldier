@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Facial Emotion Detection – CHATHeal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(to right, #1f2937, #4b5563);
+            color: #f9fafb;
+            display: flex;
+            flex-direction: row;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 80px;
+            background-color: #111827;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 0;
+            flex-shrink: 0;
+            border-right: 1px solid #374151;
+        }
+
+        aside i {
+            color: #9ca3af;
+            margin: 2.5rem 0;
+            font-size: 1.75rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        aside i:hover {
+            color: #3b82f6;
+        }
+
+        /* Main content */
+        main {
+            flex: 1;
+            padding: 2.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            overflow-y: auto;
+            max-width: 100vw;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background-color: #1f2937;
+            padding: 2rem 2.5rem;
+            border-radius: 1rem;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            color: #bfdbfe;
+        }
+
+        .modal-content p {
+            font-size: 1.15rem;
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+
+        .close-btn {
+            margin-top: 1.8rem;
+            padding: 0.7rem 1.6rem;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: #dc2626;
+        }
+
+        /* Crisis button */
+        .crisis-btn {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 1.25rem 1.35rem;
+            font-size: 1.75rem;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.6);
+            animation: pulse 2s infinite;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            z-index: 20;
+        }
+
+        .crisis-btn:hover {
+            background-color: #b91c1c;
+            box-shadow: 0 0 20px rgba(185, 28, 28, 0.8);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(220, 38, 38, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+            }
+        }
+
+
+        .camera-section {
+            background-color: #1e293b;
+            padding: 2.5rem;
+            border-radius: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        video,
+        canvas {
+            border-radius: 1rem;
+            width: 320px;
+            height: 240px;
+            object-fit: cover;
+            background-color: #000;
+        }
+
+        .detect-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .detect-btn:hover {
+            background-color: #2563eb;
+        }
+    </style>
+</head>
+
+<body>
+    <aside>
+        <a href="/"><i class="fas fa-home" title="Home"></i></a>
+        <a href="/chat"><i class="fas fa-comments" title="Chat"></i></a>
+        <a href="/therapies"><i class="fas fa-heart" title="Therapies"></i></a>
+        <a href="/tracker"><i class="fas fa-chart-line" title="Tracker"></i></a>
+        <a href="/profile"><i class="fas fa-user" title="Profile"></i></a>
+        <a href="/emotion"><i class="fas fa-face-smile" title="Emotion Detection"></i></a> <!-- New -->
+    </aside>
+
+
+    <main>
+        <section class="hero">
+            <div>
+                <h1>Emotion Detection</h1>
+                <p>Let AI help understand your emotional well-being through facial analysis.</p>
+            </div>
+            <!-- <img src="{{ url_for('static', filename='emotion.jpg') }}" alt="Emotion Illustration"> -->
+        </section>
+
+        <section class="camera-section">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <button class="detect-btn" onclick="captureAndSend()">Detect Emotion</button>
+        </section>
+    </main>
+
+    <div id="modal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 id="modal-title">Detected Emotion</h2>
+            <p id="modal-text"></p>
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+
+        // Access the camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                alert("Camera access denied or unavailable.");
+                console.error(err);
+            });
+
+        function captureAndSend() {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append('image', blob, 'capture.png');
+
+                fetch("{{ url_for('detect_emotion') }}", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("modal-text").textContent = `Emotion: ${data.emotion}`;
+                        document.getElementById("modal").style.display = "flex";
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Failed to detect emotion.");
+                    });
+            }, 'image/png');
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
+</body>
+
+</html>

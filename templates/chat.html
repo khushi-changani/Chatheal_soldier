@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CHATHeal – Live Chat</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Font (optional) -->
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Styles -->
+  <style>
+    /* ========= RESET ========= */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #1f2937, #4b5563);
+      color: #f9fafb;
+      min-height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ========= SIDEBAR ========= */
+    aside {
+      width: 80px;
+      background-color: #111827;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 0;
+      border-right: 1px solid #374151;
+      flex-shrink: 0;
+    }
+    aside a { position: relative; }
+    aside i {
+      font-size: 1.75rem;
+      color: #9ca3af;
+      margin: 2.5rem 0;
+      transition: color 0.3s ease;
+      cursor: pointer;
+    }
+    aside a.active i,
+    aside i:hover { color: #3b82f6; }
+    /* Tooltip (title replacement) */
+    aside a:hover::after {
+      content: attr(title);
+      position: absolute;
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #374151;
+      padding: 0.25rem 0.6rem;
+      border-radius: 0.4rem;
+      white-space: nowrap;
+      font-size: 0.75rem;
+    }
+
+    /* ========= MAIN CHAT LAYOUT ========= */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 2.5rem;
+      overflow: hidden;
+    }
+    .chat-wrapper {
+      flex: 1;
+      display: flex;
+      gap: 2rem;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* ---- CONTACTS PANEL ---- */
+    .contacts-panel {
+      width: 280px;
+      background: #1e293b;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+    .contacts-header {
+      padding: 1.1rem 1.5rem;
+      background: #1f2937;
+      font-size: 1.25rem;
+      font-weight: 600;
+      border-bottom: 1px solid #374151;
+    }
+    .contacts-list {
+      list-style: none;
+      overflow-y: auto;
+    }
+    .contact {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.9rem 1.2rem;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+    .contact:hover { background: #293449; }
+    .contact.active { background: #374151; }
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #374151;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #60a5fa;
+      flex-shrink: 0;
+    }
+    .contact-meta { flex: 1; }
+    .contact-name {
+      font-weight: 600;
+      font-size: 1rem;
+      display: block;
+    }
+    .contact-lastmsg {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    /* ---- MESSAGES PANEL ---- */
+    .messages-panel {
+      flex: 1;
+      background: #1e293b;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+    .messages-header {
+      padding: 1.1rem 1.5rem;
+      background: #1f2937;
+      border-bottom: 1px solid #374151;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .messages-header h2 { font-size: 1.3rem; font-weight: 600; }
+
+    .messages-body {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .msg {
+      max-width: 80%;
+      padding: 0.85rem 1.1rem;
+      border-radius: 0.8rem;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      position: relative;
+      word-wrap: break-word;
+    }
+    .msg.sent {
+      align-self: flex-end;
+      background: #3b82f6;
+    }
+    .msg.received {
+      align-self: flex-start;
+      background: #374151;
+    }
+    .msg .time {
+      position: absolute;
+      bottom: -1.1rem;
+      right: 0.3rem;
+      font-size: 0.65rem;
+      color: #9ca3af;
+    }
+
+    /* ---- INPUT AREA ---- */
+    .message-input {
+      display: flex;
+      gap: 0.8rem;
+      padding: 1rem 1.3rem;
+      border-top: 1px solid #374151;
+      background: #1f2937;
+    }
+    .message-input input {
+      flex: 1;
+      background: #374151;
+      border: none;
+      border-radius: 0.6rem;
+      padding: 0.85rem 1rem;
+      font-size: 0.95rem;
+      color: #f9fafb;
+    }
+    .message-input input::placeholder { color: #9ca3af; }
+    .message-input button {
+      background: #3b82f6;
+      border: none;
+      border-radius: 0.6rem;
+      padding: 0 1.1rem;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .message-input button:hover { background: #2563eb; }
+
+    /* ========= RESPONSIVE ========= */
+    @media (max-width: 900px) {
+      aside {
+        flex-direction: row;
+        width: 100%;
+        height: 60px;
+        padding: 0.5rem 0;
+        border-right: none;
+        border-bottom: 1px solid #374151;
+      }
+      aside i { margin: 0 1.2rem; font-size: 1.5rem; }
+      .chat-wrapper { flex-direction: column; }
+      .contacts-panel { width: 100%; height: 240px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========= SIDEBAR ========= -->
+  <aside>
+    <a href="/"><i class="fas fa-home" title="Home"></i></a>
+    <a href="/chat"><i class="fas fa-comments" title="Chat"></i></a>
+    <a href="/therapies"><i class="fas fa-heart" title="Therapies"></i></a>
+    <a href="/tracker"><i class="fas fa-chart-line" title="Tracker"></i></a>
+    <a href="/profile"><i class="fas fa-user" title="Profile"></i></a>
+    <a href="/emotion"><i class="fas fa-face-smile" title="Emotion Detection"></i></a>
+  </aside>
+  <!-- ========= MAIN ========= -->
+  <main>
+    <h1 style="font-size: 2.2rem; margin-bottom: 1.5rem;">Live Support Chat</h1>
+
+    <div class="chat-wrapper">
+      <!-- CONTACTS -->
+      <div class="contacts-panel">
+        <div class="contacts-header">Chats</div>
+        <ul class="contacts-list" id="contacts-list">
+          <li class="contact active" onclick="switchChat('Support Bot')">
+            <div class="avatar">SB</div>
+            <div class="contact-meta">
+              <span class="contact-name">Support Bot</span>
+              <span class="contact-lastmsg">Typing...</span>
+            </div>
+          </li>
+          <li class="contact" onclick="switchChat('Peer Mentor')">
+            <div class="avatar">PM</div>
+            <div class="contact-meta">
+              <span class="contact-name">Peer Mentor</span>
+              <span class="contact-lastmsg">Hey, how was...</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="messages-panel">
+        <div class="messages-header">
+          <i class="fas fa-robot"></i>
+          <h2 id="chat-title">Support Bot</h2>
+        </div>
+        <div class="messages-body" id="messages">
+          <div class="msg received">
+            <p>Hello! I'm here to help. How are you feeling today?</p>
+            <span class="time">12:00</span>
+          </div>
+        </div>
+        <div class="message-input">
+          <input type="text" id="message-input" placeholder="Type your message..." aria-label="Message input" autocomplete="off" />
+          <button id="send-btn" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========= CHAT SCRIPT ========= -->
+  <script>
+    const messagesEl = document.getElementById('messages');
+    const inputEl     = document.getElementById('message-input');
+    const sendBtn     = document.getElementById('send-btn');
+    const chatTitle   = document.getElementById('chat-title');
+
+    // Auto-scroll helper
+    function scrollToBottom() {
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    // Add message bubble
+    function addMessage(text, type = 'sent') {
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('msg', type);
+      wrapper.innerHTML = `<p>${text}</p><span class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
+      messagesEl.appendChild(wrapper);
+      scrollToBottom();
+    }
+
+    // Send user message
+    function sendMessage() {
+      const text = inputEl.value.trim();
+      if (!text) return;
+      addMessage(text, 'sent');
+      inputEl.value = '';
+
+      // Simulate bot reply
+      setTimeout(() => {
+        addMessage('Thank you for sharing. I am listening.', 'received');
+      }, 800);
+    }
+
+    // Switch chat (placeholder)
+    function switchChat(name) {
+      chatTitle.textContent = name;
+      document.querySelectorAll('.contact').forEach(c => c.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      // Clear existing messages for demo
+      messagesEl.innerHTML = '<div class="msg received"><p>This conversation is now active.</p><span class="time">'+new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})+'</span></div>';
+    }
+
+    // Event listeners
+    sendBtn.addEventListener('click', sendMessage);
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // Close input autocomplete on mobile autofill
+    inputEl.setAttribute('autocomplete', 'off');
+  </script>
+</body>
+</html>

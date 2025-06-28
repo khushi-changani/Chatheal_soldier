@@ -1,10 +1,15 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from scripts.user import registerUser, activate, loginUser, sendPasswordResetMail, fetchUser
+from scripts.model import predictEmotionFace
+from werkzeug.utils import secure_filename
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = b'\x02\x81I\r\x88~E\x17\xaf\xf7\xfd\x8d;\xd5M\xd8\x95Xj\xf2\xab\xc8\xd6\xe8'
+
+app.config['UPLOAD_FOLDER'] = 'uploads'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 @app.route('/')
 def index():
@@ -76,6 +81,30 @@ def chat():
         return render_template('chat.html')
     return redirect(url_for('login'))
 
+@app.route('/emotion')
+def emotion_page():
+    return render_template('emotion.html')
+
+@app.route('/detect_emotion', methods=['POST'])
+def detect_emotion():
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image uploaded'}), 400
+
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(filepath)
+
+    try:
+        emotion = predictEmotionFace(filepath)
+        os.remove(filepath)
+        return jsonify({'emotion': emotion})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
 @app.route('/therapies')
 def therapies():
     if ('login' in session) & (session.get('login') == True):

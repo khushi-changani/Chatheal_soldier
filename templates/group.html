@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHATHeal – Group Therapy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ===== Base Reset ===== */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      background:linear-gradient(to right,#1f2937,#4b5563);
+      color:#f9fafb;display:flex;min-height:100vh;overflow:hidden
+    }
+    /* ===== Sidebar ===== */
+    aside{
+      width:80px;background:#111827;border-right:1px solid #374151;flex-shrink:0;
+      display:flex;flex-direction:column;align-items:center;padding:1.5rem 0
+    }
+    aside a{position:relative;margin:2.2rem 0}
+    aside i{color:#9ca3af;font-size:1.75rem;transition:color .3s;cursor:pointer}
+    aside a.active i,aside i:hover{color:#3b82f6}
+    aside a:hover::after{content:attr(title);position:absolute;left:100%;top:50%;transform:translateY(-50%);
+      background:#374151;padding:.3rem .7rem;border-radius:.45rem;font-size:.75rem;white-space:nowrap}
+
+    /* ===== Main Layout ===== */
+    main{flex:1;display:flex;flex-direction:column;gap:2rem;padding:2.5rem;overflow-y:auto}
+
+    /* ===== Hero ===== */
+    .hero{display:flex;gap:2.5rem;background:#1e293b;padding:2.5rem;border-radius:1.3rem;
+      box-shadow:0 6px 15px rgba(0,0,0,.25);flex-wrap:wrap}
+    .hero-text{flex:1 1 320px}
+    .hero-text h1{font-size:2.8rem;font-weight:700;margin-bottom:.6rem}
+    .hero-text p{font-size:1.15rem;color:#d1d5db;max-width:620px;margin-bottom:1.5rem}
+    .cta-btn{background:#3b82f6;border:none;border-radius:.7rem;padding:.8rem 1.6rem;font-size:1rem;font-weight:600;cursor:pointer;transition:background .3s}
+    .cta-btn:hover{background:#2563eb}
+    .hero-img{flex:1 1 260px;display:flex;justify-content:center;align-items:center}
+    .hero-img img{max-width:340px;width:100%;border-radius:1rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));user-select:none}
+
+    /* ===== Tab Navigation ===== */
+    .tab-nav{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.2rem}
+    .tab-btn{background:#374151;border:none;border-radius:1.2rem;padding:.5rem 1.2rem;font-size:.9rem;cursor:pointer;color:#f9fafb;transition:background .3s}
+    .tab-btn.active,.tab-btn:hover{background:#3b82f6}
+
+    /* ===== Sections ===== */
+    section{background:#1e293b;padding:2rem 2.5rem;border-radius:1.2rem;box-shadow:0 6px 15px rgba(0,0,0,.25);display:none}
+    section.active{display:block}
+    section h2{font-size:2rem;color:#bfdbfe;margin-bottom:1rem}
+    section p,section li{font-size:1.05rem;color:#d1d5db;line-height:1.6}
+    ul{padding-left:1.4rem;list-style:disc}
+
+    /* ===== Benefits Grid ===== */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:1.2rem}
+    .card{background:#273449;border-radius:1rem;padding:1.2rem;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+    .card i{font-size:1.5rem;color:#60a5fa;margin-bottom:.4rem}
+
+    /* ===== Testimonials Slider ===== */
+    .slider{position:relative;overflow:hidden;border-radius:1rem}
+    .slides{display:flex;transition:transform .6s ease}
+    .slide{min-width:100%;padding:2rem;background:#273449;display:flex;flex-direction:column;gap:1rem}
+    .slide p{font-size:1rem;font-style:italic;color:#e5e7eb}
+    .slide span{font-size:.9rem;color:#9ca3af;align-self:flex-end}
+    .slider-dots{display:flex;justify-content:center;gap:.5rem;margin-top:1rem}
+    .dot{width:10px;height:10px;border-radius:50%;background:#374151;cursor:pointer;transition:background .3s}
+    .dot.active{background:#3b82f6}
+
+    /* ===== Modal ===== */
+    .modal{display:none;position:fixed;inset:0;z-index:30;justify-content:center;align-items:center;background:rgba(0,0,0,.6);padding:1rem}
+    .modal-content{background:#1f2937;border-radius:1rem;padding:2rem 2.5rem;max-width:480px;width:100%;box-shadow:0 8px 25px rgba(0,0,0,.7)}
+    .modal-content h3{font-size:1.6rem;margin-bottom:1rem;color:#bfdbfe;text-align:center}
+    .modal-content label{display:block;font-size:.9rem;margin-top:.8rem;color:#d1d5db}
+    .modal-content input,select{width:100%;background:#374151;border:none;border-radius:.6rem;padding:.6rem 1rem;margin-top:.4rem;color:#f9fafb;font-size:.9rem}
+    .modal-content button{margin-top:1.4rem;width:100%;background:#3b82f6;border:none;border-radius:.6rem;padding:.7rem;font-weight:600;font-size:1rem;color:#fff;cursor:pointer;transition:background .3s}
+    .modal-content button:hover{background:#2563eb}
+    .close-x{position:absolute;top:1rem;right:1rem;font-size:1.3rem;cursor:pointer;color:#9ca3af}
+
+    /* ===== Responsive ===== */
+    @media(max-width:900px){
+      aside{flex-direction:row;width:100%;height:60px;border-right:none;border-bottom:1px solid #374151;padding:.5rem 0}
+      aside a{margin:0 1.2rem}
+      aside i{font-size:1.5rem}
+      .hero{flex-direction:column;text-align:center}
+      .hero-text h1{font-size:2.2rem}
+      .hero-img img{max-width:260px}
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== Sidebar ===== -->
+  <aside>
+    <a href="/"><i class="fas fa-home" title="Home"></i></a>
+    <a href="/chat"><i class="fas fa-comments" title="Chat"></i></a>
+    <a href="/therapies"><i class="fas fa-heart" title="Therapies"></i></a>
+    <a href="/tracker"><i class="fas fa-chart-line" title="Tracker"></i></a>
+    <a href="/profile"><i class="fas fa-user" title="Profile"></i></a>
+    <a href="/emotion"><i class="fas fa-face-smile" title="Emotion Detection"></i></a>
+  </aside>
+
+  <!-- ===== Main ===== -->
+  <main>
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Group Therapy</h1>
+        <p>Connect, share, and grow with others who understand your journey. Guided by licensed professionals, group therapy offers a powerful blend of community and evidence‑based healing.</p>
+        <button class="cta-btn" onclick="openModal()">Join a Session</button>
+      </div>
+      <div class="hero-img">
+        <img src="group-therapy.jpg" alt="Group therapy session illustration" />
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-target="overview" onclick="switchTab(this)">Overview</button>
+      <button class="tab-btn" data-target="structure" onclick="switchTab(this)">Structure</button>
+      <button class="tab-btn" data-target="benefits" onclick="switchTab(this)">Benefits</button>
+      <button class="tab-btn" data-target="testimonials" onclick="switchTab(this)">Testimonials</button>
+      <button class="tab-btn" data-target="resources" onclick="switchTab(this)">Resources</button>
+    </div>
+
+    <!-- Sections -->
+    <section id="overview" class="active">
+      <h2>What Is Group Therapy?</h2>
+      <p>Group therapy brings 6‑12 individuals together to explore shared concerns. Facilitators foster trust, safety, and constructive dialogue using proven therapeutic frameworks.</p>
+      <ul>
+        <li>Weekly 60‑90 minute sessions</li>
+        <li>Confidential and inclusive environment</li>
+        <li>Focus on PTSD, anxiety, grief, or life transitions</li>
+      </ul>
+    </section>
+
+    <section id="structure">
+      <h2>Session Structure</h2>
+      <div class="grid">
+        <div class="card"><i class="fas fa-handshake"></i><p><strong>Check‑in</strong> – Members share mood and goals.</p></div>
+        <div class="card"><i class="fas fa-comments"></i><p><strong>Discussion</strong> – Guided topic or open sharing.</p></div>
+        <div class="card"><i class="fas fa-brain"></i><p><strong>Skill Building</strong> – CBT, mindfulness, or grounding exercises.</p></div>
+        <div class="card"><i class="fas fa-seedling"></i><p><strong>Reflection</strong> – Set intentions before closing.</p></div>
+      </div>
+    </section>
+
+    <section id="benefits">
+      <h2>Why It Works</h2>
+      <div class="grid">
+        <div class="card"><i class="fas fa-people-group"></i><p>Reduces isolation through shared experience.</p></div>
+        <div class="card"><i class="fas fa-lightbulb"></i><p>Gains diverse perspectives and coping ideas.</p></div>
+        <div class="card"><i class="fas fa-heart-circle-bolt"></i><p>Builds empathy and self‑awareness.</p></div>
+        <div class="card"><i class="fas fa-user-check"></i><p>Encourages accountability for progress.</p></div>
+      </div>
+    </section>
+
+    <section id="testimonials">
+      <h2>Member Stories</h2>
+      <div class="slider" id="slider">
+        <div class="slides">
+          <div class="slide"><p>“Hearing others voice feelings I thought were only mine was life‑changing.”</p><span>— Arjun, Army Veteran</span></div>
+          <div class="slide"><p>“I learned grounding skills from peers that help me every day.”</p><span>— Priya, Emergency Responder</span></div>
+          <div class="slide"><p>“Group gave me the courage to speak my truth and feel accepted.”</p><span>— Rakesh, Border Guard</span></div>
+        </div>
+        <div class="slider-dots" id="dots"></div>
+      </div>
+    </section>
+
+    <section id="resources">
+      <h2>Further Resources</h2>
+      <ul>
+        <li><a href="https://www.apa.org/topics/psychotherapy/group" target="_blank" rel="noopener">APA – Group Therapy Overview</a></li>
+        <li><a href="https://www.nami.org/About-Mental-Illness/Treatments/Types-of-Mental-Health-Treatment" target="_blank" rel="noopener">NAMI – Treatment Types</a></li>
+        <li><a href="https://www.goodtherapy.org/learn-about-therapy/types/group-therapy" target="_blank" rel="noopener">GoodTherapy – What Is Group Therapy?</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- ===== Join Modal ===== -->
+  <div class="modal" id="join-modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="close-x" onclick="closeModal()">&times;</span>
+      <h3>Request to Join a Group</h3>
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Your name"/>
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="you@example.com"/>
+      <label for="focus">Focus Area</label>
+      <select id="focus">
+        <option>PTSD Recovery</option>
+        <option>Traumatic Grief</option>
+        <option>Transition Stress</option>
+      </select>
+      <button onclick="submitForm()">Submit Request</button>
+    </div>
+  </div>
+
+  <!-- ===== Scripts ===== -->
+  <script>
+    /* ---------- Tab Switch ---------- */
+    function switchTab(btn){
+      document.querySelector('.tab-btn.active').classList.remove('active');
+      btn.classList.add('active');
+      document.querySelector('section.active').classList.remove('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+    }
+
+    /* ---------- Join Modal ---------- */
+    function openModal(){document.getElementById('join-modal').style.display='flex'}
+    function closeModal(){document.getElementById('join-modal').style.display='none'}
+    function submitForm(){closeModal();alert('Thank you! We will contact you soon.');}
+
+    /* ---------- Testimonials Slider ---------- */
+    const slides=document.querySelector('#slider .slides');
+    const dotsContainer=document.getElementById('dots');
+    const totalSlides=slides.children.length;
+    let index=0;
+    for(let i=0;i<totalSlides;i++){
+      const dot=document.createElement('div');dot.classList.add('dot');if(i===0)dot.classList.add('active');
+      dot.addEventListener('click',()=>{index=i;updateSlider();});dotsContainer.appendChild(dot);
+    }
+    function updateSlider(){slides.style.transform=`translateX(-${index*100}%)`;
+      document.querySelector('.dot.active').classList.remove('active');dotsContainer.children[index].classList.add('active');}
+    setInterval(()=>{index=(index+1)%totalSlides;updateSlider();},6000);
+
+    /* Close modal on ESC key */
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+  </script>
+</body>
+</html>
